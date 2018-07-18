@@ -16,9 +16,16 @@ var parseCommand = function (cmdStr) {
 
 var roll = function (str) {
   var parts = str.split('d');
-  var count = parts[0];
-  var die = parts[1];
-  
+  var count;
+  var die;
+  if (isNaN(parts[0])) { //for '/roll perception' formatting
+    count = 1;
+    die = 20;
+  }
+  else {  //for '/roll #d#' format
+    count = parts[0];
+    die = parts[1];
+  }
   var roll = "";
   var total = 0;
   for (var i = 0; i < count; i++) {
