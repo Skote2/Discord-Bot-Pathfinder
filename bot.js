@@ -18,11 +18,11 @@ var roll = function (str) {
   var parts = str.split('d');
   var count;
   var die;
-  if (isNaN(parts[0])) { //for '/roll perception' formatting
+  if (isNaN(parts[0])) { //for '/roll skill' formatting
     count = 1;
     die = 20;
   }
-  else {  //for '/roll #d#' format
+  else {  //for '/roll #d#' format (count-d-die#)
     count = parts[0];
     die = parts[1];
   }
@@ -35,7 +35,10 @@ var roll = function (str) {
     total += r;
   }
   roll = roll.substring(0, roll.length -2);
-  roll += "= " + total;
+  if (count > 1)//formatting
+    roll += "= " + total;
+  else
+    roll = total;
   return roll;
 };
 
