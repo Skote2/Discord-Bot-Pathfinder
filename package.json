@@ -1,0 +1,25 @@
+{
+  "name": "discord-bot-pathfinder",
+  "version": "1.0.0",
+  "description": "Some garbo bot I built for discord",
+  "main": "bot.js",
+  "dependencies": {
+    "bufferutil": "^4.0.0",
+    "discord.js": "^11.3.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://www.github.com/Skote2/Discord-Bot-Pathfinder/"
+  },
+  "keywords": [
+    "Bot",
+    "Discord",
+    "JS"
+  ],
+  "author": "David N. Zilio",
+  "license": "ISC"
+}
