@@ -15,32 +15,64 @@ var parseCommand = function (cmdStr) {
 }
 
 var roll = function (str) {
-  var parts = str.split('d');
-  var count;
-  var die;
-  if (isNaN(parts[0])) { //for '/roll skill' formatting
-    count = 1;
-    die = 20;
+  const regex = /(([\+\s]*-){2}[\s]*)*[\+\s]*([\+-])([\+\s]*)((\d*)(\s*)([dz])(\s*)(([\d]+)|(%|\u{2030}|\u{2031}))|([\d]+)|(\w[\s\w\d]*))/gmui
+  const limit = 1000//above this we just return the mean value, below this we roll each number on it's own
+  const displayLimit = 12//display at most this many dice per group
+  
+  var masterTotal = 0
+  var masterOutput = ""
+  var lineCount = 0
+  
+  //str = "/roll 5d6 + 2"
+  //it makes the RegEx work
+  //str = "+"+str
+  str = "+"+str.replace(/\/roll\s*/gmui, "+")
+  
+  let m
+  //we loop once per match/dice to throw
+  while ((m = regex.exec(str)) !== null) {
+    if (m.index === regex.lastIndex) {
+        regex.lastIndex++
+    }
+    
+    var sign = ((m[3].includes('+')) ? (1) : (-1))
+    var display = ((sign == -1)?"-":"")+m[5]
+    var count = ((isNaN(parseInt(m[6]))) ? (1) : (parseInt(m[6])))
+    var min = +(!m[8] || m[8].toUpperCase().includes("D"))
+    var max = ((isNaN(parseInt(m[11]))) ? ({"%":100, "\u2030":1000, "\u2031":10000}[m[10]]||20) : (parseInt(m[11])))-!min
+    if(!isNaN(parseInt(m[13]))){max=min=parseInt(m[13])}//adds support for constants
+    
+    //both min and max are inclusive
+    
+    var total = 0
+    var output;
+    if(min === max){
+      output = display
+      total = max*sign;
+    }else if(count <= 0){
+      output = display+": Not going to roll "+count+" dice, you get nothing"
+    }else if(count > limit){
+      total = Math.floor((max-min)*count/2+min*count)*sign
+      output = display+": [ehh..] about "+total
+    }else{
+      var arrOutputNumbers = Array()
+      while(count-- >0){
+        let n = Math.floor(Math.random()*(max-min+1)+min)
+        if(count <= displayLimit){arrOutputNumbers.push(n)}
+        total += n
+      }
+      total *= sign
+      output = display+":"+(arrOutputNumbers.length>=displayLimit?"...":" [")+arrOutputNumbers[0]
+      arrOutputNumbers.forEach((n,i) => {if(i<displayLimit && i>0){output+=", "+n}})
+      output+="] for a total of: "+total
+    }
+    
+    masterTotal += total
+    masterOutput+= (lineCount++==0?"":"\n")+output
   }
-  else {  //for '/roll #d#' format (count-d-die#)
-    count = parts[0];
-    die = parts[1];
-  }
-  var roll = "";
-  var total = 0;
-  for (var i = 0; i < count; i++) {
-    r = Math.ceil(die * Math.random());
-    if (r === 0) r = 1;
-    roll += r + " + ";
-    total += r;
-  }
-  roll = roll.substring(0, roll.length -2);
-  if (count > 1)//formatting
-    roll += "= " + total;
-  else
-    roll = total;
-  return roll;
-};
+  //console.log(masterOutput + ((lineCount > 1)?"\nTotal: "+masterTotal:""))
+  return masterOutput + ((lineCount > 1)?"\nTotal: "+masterTotal:"")
+}
 
 //load text
 var loadText = function (fileName) {
