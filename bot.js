@@ -15,7 +15,7 @@ var parseCommand = function (cmdStr) {
 }
 
 var roll = function (str) {
-  const regex = /(([\+\s]*-){2}[\s]*)*[\+\s]*([\+-])([\+\s]*)((\d*)(\s*)([dz])(\s*)(([\d]+)|(%|\u{2030}|\u{2031}))|([\d]+)|(\w[\s\w\d]*))/gmui
+  const regex = /(([\+\s]*-){2}[\s]*)*[\+\s]*(-)?([\+\s]*)((\d*)(\s*)([dz])(\s*)(([\d]+)|(%|\u{2030}|\u{2031}))|([\d]+)|(\w[\s\w\d]*))/gmui
   const limit = 1000//above this we just return the mean value, below this we roll each number on it's own
   const displayLimit = 12//display at most this many dice per group
   
@@ -35,7 +35,7 @@ var roll = function (str) {
         regex.lastIndex++
     }
     
-    var sign = ((m[3].includes('+')) ? (1) : (-1))
+    var sign = (((m[3]+"").includes('-')) ? (-1) : (1))
     var display = ((sign == -1)?"-":"")+m[5]
     var count = ((isNaN(parseInt(m[6]))) ? (1) : (parseInt(m[6])))
     var min = +(!m[8] || m[8].toUpperCase().includes("D"))
