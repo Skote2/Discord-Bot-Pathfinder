@@ -102,7 +102,7 @@ client.on('message', msg => {
     var replyStr = "empty Reply";
 
     if (cmd[0] === "roll")
-      replyStr = roll(cmd[1]);
+      replyStr = roll(msg.content);
     else if (cmd[0] === -1)
       replyStr = "Unknown Command";
     else if (cmd === [])
