@@ -62,7 +62,7 @@ var roll = function (str) {
         total += n
       }
       total *= sign
-      output = display+":"+(arrOutputNumbers.length>=displayLimit?"...":" [")+arrOutputNumbers[0]
+      output = display+":"+(arrOutputNumbers.length>displayLimit?" ...":" [")+arrOutputNumbers[0]
       arrOutputNumbers.forEach((n,i) => {if(i<displayLimit && i>0){output+=", "+n}})
       output+="] for a total of: "+total
     }
