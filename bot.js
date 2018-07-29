@@ -2,6 +2,7 @@ const fs        = require('fs');
 const Discord   = require('discord.js');
 const client    = new Discord.Client();
 const tokenFile = "token.txt";
+const NamedRegExp = require('named-regexp-groups')
 
 var parseCommand = function (cmdStr) {
   var command = [];
@@ -61,7 +62,7 @@ var roll = function (str) {
   i -> caseIncensitive
   u -> Unicode
   */
-  const regex = /(?<LeadingPlussesAndMinuses>(?<EvenMinuses>((\s*\++)+\s*)|(([\s\+]*-){2})+[\s\+]*)|(?<OddMinuses>[\s\+]*-(([\s\+]*-){2})*[\s\+]*))(?<dice>(((?<numberOfDice>\d+)?(?<typeOfDice>(?<min1>[d])|(?<min0>[z])))?(?<sizeOfDice>(?<sizeNumber>\d+)|(?<sizeCharacter>%|\u{2030}|\u{2031}))([x\*](?<multiplyBy>\d+))?)|(?<skill>\w(\s?\w)*[\(\)]?))/giu
+  const regex = new NamedRegExp(/(?<LeadingPlussesAndMinuses>(?<EvenMinuses>((\s*\++)+\s*)|(([\s\+]*-){2})+[\s\+]*)|(?<OddMinuses>[\s\+]*-(([\s\+]*-){2})*[\s\+]*))(?<dice>(((?<numberOfDice>\d+)?(?<typeOfDice>(?<min1>[d])|(?<min0>[z])))?(?<sizeOfDice>(?<sizeNumber>\d+)|(?<sizeCharacter>%|\u{2030}|\u{2031}))([x\*](?<multiplyBy>\d+))?)|(?<skill>\w(\s?\w)*[\(\)]?))/giu)
   
   const limit = 1000//above this we just return the mean value, below this we roll each number on it's own
   const displayLimit = 12//display at most this many dice per group
